@@ -63,7 +63,7 @@
 /*
  * Serial console configuration
  */
-#define HIFIVE_UART_BASE_ADDR	0x10010000
+#define LITE_UART_BASE_ADDR	0x10010000
 #define HIFIVE_PERIPH_CLK_FREQ	(CONFIG_SYS_CLK_FREQ / 2)
 #define CONSOLE_ARG				"console=ttyS0,115200\0"
 

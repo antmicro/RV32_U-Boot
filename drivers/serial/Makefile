@@ -66,6 +66,7 @@ obj-$(CONFIG_MPC8XX_CONS) += serial_mpc8xx.o
 obj-$(CONFIG_NULLDEV_SERIAL) += serial_nulldev.o
 obj-$(CONFIG_OWL_SERIAL) += serial_owl.o
 obj-$(CONFIG_HIFIVE_SERIAL) += serial_hifive.o
+obj-$(CONFIG_LITEUART_SERIAL) += serial_liteuart.o
 
 ifndef CONFIG_SPL_BUILD
 obj-$(CONFIG_USB_TTY) += usbtty.o

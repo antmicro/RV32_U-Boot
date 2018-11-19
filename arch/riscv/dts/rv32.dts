@@ -386,7 +386,7 @@
 			reg-names = "mem";
 		};
 		L28: serial@10010000 {
-			compatible = "sifive,uart0";
+			compatible = "liteuart";
 /*			interrupt-parent = <&L4>; */
 			interrupts = <0>;
 			reg = <0x0 0x10010000 0x0 0x1000>;

@@ -512,7 +512,12 @@ config NULLDEV_SERIAL
 	  Select this to enable null serial device support. A null serial
 	  device merely acts as a placeholder for a serial device and does
 	  nothing for all it's operation.
-	  
+
+config LITEUART_SERIAL
+    bool "LiteUART serial device"
+    help
+      Select this to enable LiteX LiteUART serial device support.
+
 config HIFIVE_SERIAL
     bool "HiFive serial device"
     help
