@@ -99,15 +99,15 @@
  * Ethernet
  */
 #ifdef CONFIG_CMD_NET
-#define CONFIG_MACB
+//#define CONFIG_MACB
 #define CONFIG_GMII
 #define CONFIG_NET_RETRY_COUNT		20
-#define CONFIG_MACB_SEARCH_PHY
+//#define CONFIG_MACB_SEARCH_PHY
 #define CONFIG_ARP_TIMEOUT		200UL
 #define CONFIG_IP_DEFRAG
 #define CONFIG_ETHADDR              70:b3:d5:92:f0:00 /* sifive MAC address */
-#define CONFIG_CMD_MII
-#define CONFIG_RESET_PHY_R
+//#define CONFIG_CMD_MII
+//#define CONFIG_RESET_PHY_R
 
 #endif
 

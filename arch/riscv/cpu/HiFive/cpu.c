@@ -50,6 +50,7 @@ static uint64_t ddr_phy_fixup(void);
 int arch_cpu_init(void)
 {
 
+#if 0
 	const uint64_t ddr_end = CONFIG_SYS_SDRAM_BASE + DDR_SIZE;
 	uint32_t regdata;
     volatile int ix;
@@ -128,6 +129,7 @@ int arch_cpu_init(void)
 	g_aloe_prci->GEMGXLPLLCFG1  = 0x80000000u; /* Switch to PLL as clock source */
 	g_aloe_prci->DEVICERESETREG |= 0x00000020u; /* Release MAC from reset */
 	g_aloe_prci->PROCMONCFG = 0x1 << 24u;
+	#endif
 	return 0;
 
 }
