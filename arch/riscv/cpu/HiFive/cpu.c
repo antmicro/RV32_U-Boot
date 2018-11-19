@@ -40,8 +40,12 @@ static uint64_t ddr_phy_fixup(void);
 
 #define REG32(p, i) (*(volatile uint32_t *)((p) + (i)))
 #define DDR_CTRL_ADDR 0x100B0000UL
-#define DDR_SIZE  (8UL * 1024UL * 1024UL * 1024UL)
+#define DDR_SIZE  (256UL * 1024UL * 1024UL)
 #define ahbregaddr DDR_CTRL_ADDR
+
+// TODO: ashldi/lshrdi hack
+#include "../../../arch/mips/lib/ashldi3.c"
+#include "../../../arch/mips/lib/lshrdi3.c"
 
 int arch_cpu_init(void)
 {

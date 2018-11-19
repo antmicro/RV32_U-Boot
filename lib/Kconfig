@@ -373,8 +373,8 @@ config SMBIOS_PRODUCT_NAME
 
 endmenu
 
-source lib/efi/Kconfig
-source lib/efi_loader/Kconfig
+#source lib/efi/Kconfig
+#source lib/efi_loader/Kconfig
 source lib/optee/Kconfig
 
 endmenu

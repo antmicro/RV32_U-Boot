@@ -10,41 +10,20 @@
 # Rick Chen, Andes Technology Corporation <rick@andestech.com>
 #
 
-ifeq ($(CROSS_COMPILE),)
-ifdef CONFIG_32BIT
-CROSS_COMPILE := riscv32-unknown-linux-gnu-
-else
-CROSS_COMPILE := riscv64-unknown-linux-gnu-
-endif
-endif
+CONFIG_32BIT := "1"
 
-32bit-emul		:= elf32lriscv
-64bit-emul		:= elf64lriscv
+CROSS_COMPILE := riscv64-unknown-elf-
 
-ifdef CONFIG_32BIT
-PLATFORM_LDFLAGS	+= -m $(32bit-emul)
+PLATFORM_LDFLAGS	+= -m elf32lriscv
 EFI_LDS			:= elf_riscv32_efi.lds
-endif
 
-ifdef CONFIG_64BIT
-PLATFORM_LDFLAGS	+= -m $(64bit-emul)
-EFI_LDS			:= elf_riscv64_efi.lds
-endif
-ifdef TARGET_AX25_AE350
-CONFIG_STANDALONE_LOAD_ADDR = 0x00000000 \
-			      -T $(srctree)/examples/standalone/riscv.lds
-
-PLATFORM_CPPFLAGS	+= -ffixed-gp -fpic
-PLATFORM_RELFLAGS += -fno-strict-aliasing -fno-common -gdwarf-2 -ffunction-sections
-LDFLAGS_u-boot += --gc-sections -static -pie
-else
 CONFIG_STANDALONE_LOAD_ADDR = 0x08100000 \
 			      -T $(srctree)/examples/standalone/riscv.lds
 
 PLATFORM_RELFLAGS 	+= -fno-strict-aliasing -fno-common -gdwarf-2 -ffunction-sections
-PLATFORM_CPPFLAGS	+= -ffixed-gp -mcmodel=medany -fpic 
+PLATFORM_CPPFLAGS	+= -ffixed-gp -mcmodel=medany -fpic -march=rv32im -mabi=ilp32
 
-LDFLAGS_u-boot = --gc-sections -static -pie
-endif
+LDFLAGS_u-boot = --gc-sections -static
+
 EFI_CRT0		:= crt0_riscv_efi.o
 EFI_RELOC		:= reloc_riscv_efi.o

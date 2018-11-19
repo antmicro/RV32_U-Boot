@@ -51,24 +51,15 @@
 /*
  * Physical Memory Map
  */
-#if 0
-/*#define CONFIG_NR_DRAM_BANKS	1*/
-#define PHYS_SDRAM_0	0x08000000		/* SDRAM Bank #1 */
-#define PHYS_SDRAM_1	\
-	(PHYS_SDRAM_0 + PHYS_SDRAM_0_SIZE)	/* SDRAM Bank #2 */
-#define PHYS_SDRAM_0_SIZE	0x001E0000	/* 1.92 MB */
-#define PHYS_SDRAM_1_SIZE	0x001E0000	/* 1.92 MB */
-#define CONFIG_SYS_SDRAM_BASE	PHYS_SDRAM_0
-#endif
-#if 1
+
 /*#define CONFIG_NR_DRAM_BANKS	1*/
 #define PHYS_SDRAM_0	0x80000000		/* SDRAM Bank #1 */
 #define PHYS_SDRAM_1	\
 	(PHYS_SDRAM_0 + PHYS_SDRAM_0_SIZE)	/* SDRAM Bank #2 */
-#define PHYS_SDRAM_0_SIZE	0x80000000	/* 2 GB */
+#define PHYS_SDRAM_0_SIZE	0x10000000	/* 2 GB */
 #define PHYS_SDRAM_1_SIZE	0x10000000	/* 256 MB */
 #define CONFIG_SYS_SDRAM_BASE	PHYS_SDRAM_0
-#endif
+
 /*
  * Serial console configuration
  */
