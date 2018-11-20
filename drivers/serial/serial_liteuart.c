@@ -77,34 +77,27 @@ static void lite_uart_putc(char ch)
 	writel(ch, &usart->rxtxdata);
 }
 
-static int lastread;
+#define UART_EV_TX          (1 << 0)
+#define UART_EV_RX          (1 << 1)
 
 static int lite_uart_getc(void)
 {
 
 	lite_uart_t *usart = (lite_uart_t *)LITE_UART_BASE_ADDR;
-	int ch = 0;
-	while (readl(&usart->rxempty) == 1);
-	ch = readl(&usart->rxtxdata);
-	/*
-	ch = lastread;
-        lastread = UART_RXFIFO_EMPTY;
-	while((ch & UART_RXFIFO_EMPTY) != 0)
-	{
-		ch = readl(&usart->rxdata);
-	}*/
-	return ch;
+	if (usart == NULL) return 0;
+	while (!(readl(&usart->eventpending) & UART_EV_RX));
+	while (readl(&usart->rxempty));
+	int ch = readl(&usart->rxtxdata) & 0xFF;
+	writel(UART_EV_RX, &usart->eventpending);
+	writel(0, &usart->rxempty);
+        return ch;
 }
 
 static int lite_uart_tstc(void)
 {
-/*
-	lite_uart_t *usart = (lite_uart_t *)LITE_UART_BASE_ADDR;
-        if (lastread & UART_RXFIFO_EMPTY)
-                lastread = readl(&usart->rxdata);
-        return !(lastread & UART_RXFIFO_EMPTY);
-	*/
-return 1;
+        lite_uart_t *usart = (lite_uart_t *)LITE_UART_BASE_ADDR;
+	if (usart == NULL) return 0;
+        return !!(readl(&usart->eventpending) & UART_EV_RX);
 }
 
 static struct serial_device lite_uart_drv = {

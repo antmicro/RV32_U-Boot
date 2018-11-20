@@ -97,7 +97,7 @@ handle_reset:
  # the following forces end alignment to 64byte boundery
   la  tp, __bss_end + 63
   and tp, tp, -64
-
+/*
   # get core id
   csrr a0, mhartid
 #define STKSHIFT 10
@@ -112,8 +112,10 @@ handle_reset:
   li a3, 1
   bgeu a0, a3, .LbootOtherHart
   # core 0 jumps to first hart
-  j call_board_init_f
+*/
 
+  j call_board_init_f
+/*
 .LbootOtherHart:
   # core 1 jumps to main_other_hart
   # Set MSIE bit to receive IPI
@@ -144,6 +146,7 @@ handle_reset:
   li a1, HIFIVE_FDT_BASE
   li t4, CONFIG_SYS_SDRAM_BASE
   jr t4
+  */
 /*
  * Set stackpointer in internal/ex RAM to call board_init_f
  */
@@ -185,13 +188,13 @@ relocate_code:
 stack_setup:
     mv sp, s2
  /* with relocation */
-#if 1
+#if 0
     la t0, _start
     sub t6, s4, t0  /* t6 <- relocation offset */
     beq t0, s4, clear_bss   /* skip relocation */
 #endif
 /* without relocation*/
-#if 0
+#if 1
     la t0, _start
     li s5, CONFIG_SYS_TEXT_BASE
     sub t6, s5, t0  /* t6 <- relocation offset */
