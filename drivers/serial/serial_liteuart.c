@@ -29,7 +29,9 @@ typedef struct lite_uart {
     u32 rxtxdata;
     u32 txfull;
     u32 rxempty;
-    // TODO
+    u32 eventstatus;
+    u32 eventpending;
+    u32 eventenable;
 } lite_uart_t;
 
 /* Information about a serial port */
@@ -57,11 +59,10 @@ static void lite_uart_setbrg(void)
 static int lite_uart_init(void)
 {
 	lite_uart_t *usart = (lite_uart_t *)LITE_UART_BASE_ADDR;
-#if 0
-	lite_uart_setbrg();
-	writel(UART_TXEN, &usart->txctrl);
-	writel(UART_RXEN, &usart->rxctrl);
-#endif
+	//lite_uart_setbrg();
+	writel(0, &usart->eventstatus);
+	writel(0, &usart->eventpending);
+	writel(0, &usart->eventenable);
     return 0;
 }
 
@@ -83,6 +84,8 @@ static int lite_uart_getc(void)
 
 	lite_uart_t *usart = (lite_uart_t *)LITE_UART_BASE_ADDR;
 	int ch = 0;
+	while (readl(&usart->rxempty) == 1);
+	ch = readl(&usart->rxtxdata);
 	/*
 	ch = lastread;
         lastread = UART_RXFIFO_EMPTY;
@@ -147,7 +150,7 @@ static void _lite_serial_set_brg(lite_uart_t *usart,
     */
     divisor = (usart_clk_rate / baudrate) -1;
 
-    writel(divisor, &usart->div);
+///    writel(divisor, &usart->div);
 
 }
 
