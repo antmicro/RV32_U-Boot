@@ -53,25 +53,29 @@
  */
 
 /*#define CONFIG_NR_DRAM_BANKS	1*/
-#define PHYS_SDRAM_0	0x80000000		/* SDRAM Bank #1 */
+#define PHYS_SDRAM_0	0x40000000		/* SDRAM Bank #1 */
+#if 0
 #define PHYS_SDRAM_1	\
 	(PHYS_SDRAM_0 + PHYS_SDRAM_0_SIZE)	/* SDRAM Bank #2 */
-#define PHYS_SDRAM_0_SIZE	0x10000000	/* 2 GB */
+#endif
+#define PHYS_SDRAM_0_SIZE	0x10000000	/* 256 MB */
+#if 0
 #define PHYS_SDRAM_1_SIZE	0x10000000	/* 256 MB */
+#endif
 #define CONFIG_SYS_SDRAM_BASE	PHYS_SDRAM_0
 
 /*
  * Serial console configuration
  */
-#define LITE_UART_BASE_ADDR	0x10010000
+#define LITE_UART_BASE_ADDR	0xE0001800
 #define HIFIVE_PERIPH_CLK_FREQ	(CONFIG_SYS_CLK_FREQ / 2)
 #define CONSOLE_ARG				"console=ttyS0,115200\0"
 
 /* Init Stack Pointer */
-#define CONFIG_SYS_INIT_SP_ADDR		(0x08000000 + 0x001D0000 - \
+#define CONFIG_SYS_INIT_SP_ADDR		(0x40000000 + 0x001D0000 - \
 					GENERATED_GBL_DATA_SIZE)
 
-#define CONFIG_SYS_LOAD_ADDR		0x80000000	/* SDRAM */
+#define CONFIG_SYS_LOAD_ADDR		0x40000000	/* SDRAM */
 
 #define HIFIVE_BASE_CLINT		0x02000000
 #define HIFIVE_BASE_MTIME		0x0200bff8

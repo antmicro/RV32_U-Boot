@@ -26,34 +26,16 @@ DECLARE_GLOBAL_DATA_PTR;
 
 /* HiFive unleashed UART register footprint */
 typedef struct lite_uart {
-    u32 txdata;
-    u32 rxdata;
-    u32 txctrl;
-    u32 rxctrl;
-    u32 ie;
-    u32 ip;
-    u32 div;
+    u32 rxtxdata;
+    u32 txfull;
+    u32 rxempty;
+    // TODO
 } lite_uart_t;
 
 /* Information about a serial port */
 struct lite_serial_platdata {
 	uint32_t base_addr;
 };
-
-/* TXCTRL register */
-#define UART_TXEN               0x1
-#define UART_TXWM(x)            (((x) & 0xffff) << 16)
-
-/* RXCTRL register */
-#define UART_RXEN               0x1
-#define UART_RXWM(x)            (((x) & 0xffff) << 16)
-
-/* IP register */
-#define UART_IP_TXWM            0x1
-#define UART_IP_RXWM            0x2
-
-#define UART_TXFIFO_FULL			0x80000000
-#define UART_RXFIFO_EMPTY			0x80000000
 
 /* If Driver Model for Serial is not defined */
 #ifndef CONFIG_DM_SERIAL
@@ -75,11 +57,11 @@ static void lite_uart_setbrg(void)
 static int lite_uart_init(void)
 {
 	lite_uart_t *usart = (lite_uart_t *)LITE_UART_BASE_ADDR;
-
+#if 0
 	lite_uart_setbrg();
 	writel(UART_TXEN, &usart->txctrl);
 	writel(UART_RXEN, &usart->rxctrl);
-
+#endif
     return 0;
 }
 
@@ -90,8 +72,8 @@ static void lite_uart_putc(char ch)
     if (ch == '\n')
        serial_putc('\r');
 
-	while (readl(&usart->txdata) & UART_TXFIFO_FULL);
-	writel(ch, &usart->txdata);
+	while (readl(&usart->txfull));
+	writel(ch, &usart->rxtxdata);
 }
 
 static int lastread;
@@ -100,22 +82,26 @@ static int lite_uart_getc(void)
 {
 
 	lite_uart_t *usart = (lite_uart_t *)LITE_UART_BASE_ADDR;
-	int ch;
+	int ch = 0;
+	/*
 	ch = lastread;
         lastread = UART_RXFIFO_EMPTY;
 	while((ch & UART_RXFIFO_EMPTY) != 0)
 	{
 		ch = readl(&usart->rxdata);
-	}
+	}*/
 	return ch;
 }
 
 static int lite_uart_tstc(void)
 {
+/*
 	lite_uart_t *usart = (lite_uart_t *)LITE_UART_BASE_ADDR;
         if (lastread & UART_RXFIFO_EMPTY)
                 lastread = readl(&usart->rxdata);
         return !(lastread & UART_RXFIFO_EMPTY);
+	*/
+return 1;
 }
 
 static struct serial_device lite_uart_drv = {
@@ -141,6 +127,7 @@ struct serial_device *default_serial_console(void)
 #endif
 
 #ifdef CONFIG_DM_SERIAL
+#error dupa
 enum serial_clk_type {
 	CLK_TYPE_NORMAL = 0,
 	CLK_TYPE_DBGU,
