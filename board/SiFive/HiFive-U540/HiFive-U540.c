@@ -64,7 +64,7 @@ int dram_init(void)
 			actual_size >> 20, expected_size >> 20);
 	}
 	gd->fdt_size = ALIGN(fdt_totalsize(gd->fdt_blob) + 0x1000, 32);
-	memcpy((void *)HIFIVE_FDT_BASE, gd->fdt_blob, gd->fdt_size);
+	memcpy((void *)0x41000000, gd->fdt_blob, gd->fdt_size);
 
 	return 0;
 }
