@@ -389,7 +389,7 @@
 			compatible = "liteuart";
 /*			interrupt-parent = <&L4>; */
 			interrupts = <0>;
-			reg = <0x0 0x10010000 0x0 0x1000>;
+			reg = <0x0 0xE0001800 0x0 0x100>;
 			reg-names = "control";
 			clocks = <&tlclk>;
 		};

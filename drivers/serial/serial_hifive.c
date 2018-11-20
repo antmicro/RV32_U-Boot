@@ -51,89 +51,6 @@ struct hive_serial_platdata {
 #define UART_TXFIFO_FULL			0x80000000
 #define UART_RXFIFO_EMPTY			0x80000000
 
-/* If Driver Model for Serial is not defined */
-#ifndef CONFIG_DM_SERIAL
-/* Set HiFive UART baud rate */
-static void hifive_uart_setbrg(void)
-{
-	hifive_uart_t *usart = (hifive_uart_t *)HIFIVE_UART_BASE_ADDR;
-    u32 baud_value;
-   /*
-    * BAUD_VALUE = (CLOCK / BAUD_RATE) - 1
-    */
-    baud_value = (HIFIVE_PERIPH_CLK_FREQ / CONFIG_BAUDRATE) -1;
-
-    writel(baud_value, &usart->div);
-}
-
-static int hifive_uart_init(void)
-{
-	hifive_uart_t *usart = (hifive_uart_t *)HIFIVE_UART_BASE_ADDR;
-
-	hifive_uart_setbrg();
-	writel(UART_TXEN, &usart->txctrl);
-	writel(UART_RXEN, &usart->rxctrl);
-
-    return 0;
-}
-
-static void hifive_uart_putc(char ch)
-{
-	hifive_uart_t *usart = (hifive_uart_t *)HIFIVE_UART_BASE_ADDR;
-
-    if (ch == '\n')
-       serial_putc('\r');
-
-	while (readl(&usart->txdata) & UART_TXFIFO_FULL);
-	writel(ch, &usart->txdata);
-}
-
-static int lastread;
-
-static int hifive_uart_getc(void)
-{
-
-	hifive_uart_t *usart = (hifive_uart_t *)HIFIVE_UART_BASE_ADDR;
-	int ch;
-	ch = lastread;
-        lastread = UART_RXFIFO_EMPTY;
-	while((ch & UART_RXFIFO_EMPTY) != 0)
-	{
-		ch = readl(&usart->rxdata);
-	}
-	return ch;
-}
-
-static int hifive_uart_tstc(void)
-{
-	hifive_uart_t *usart = (hifive_uart_t *)HIFIVE_UART_BASE_ADDR;
-        if (lastread & UART_RXFIFO_EMPTY)
-                lastread = readl(&usart->rxdata);
-        return !(lastread & UART_RXFIFO_EMPTY);
-}
-
-static struct serial_device hifive_uart_drv = {
-    .name = "hifive_uart",
-    .start = hifive_uart_init,
-    .stop = NULL,
-    .setbrg = hifive_uart_setbrg,
-    .putc = hifive_uart_putc,
-    .puts = default_serial_puts,
-    .getc = hifive_uart_getc,
-    .tstc = hifive_uart_tstc,
-};
-
-void hifive_uart_initialize(void)
-{
-    serial_register(&hifive_uart_drv);
-}
-
-struct serial_device *default_serial_console(void)
-{
-    return &hifive_uart_drv;
-}
-#endif
-
 #ifdef CONFIG_DM_SERIAL
 enum serial_clk_type {
 	CLK_TYPE_NORMAL = 0,
@@ -161,18 +78,18 @@ static void _hifive_serial_set_brg(hifive_uart_t *usart,
 void _hifive_serial_init(hifive_uart_t *usart,
 			ulong usart_clk_rate, int baudrate)
 {
-
+/*
 	hifive_uart_setbrg(usart, usart_clk_rate, baudrate);
 	writel(UART_TXEN, &usart->txctrl);
 	writel(UART_RXEN, &usart->rxctrl);
-
+*/
 }
 
 int hifive_serial_setbrg(struct udevice *dev, int baudrate)
 {
 	struct hifive_serial_priv *priv = dev_get_priv(dev);
 
-	_hifive_serial_set_brg(priv->usart, priv->usart_clk_rate, baudrate);
+//	_hifive_serial_set_brg(priv->usart, priv->usart_clk_rate, baudrate);
 
 	return 0;
 }
@@ -181,13 +98,15 @@ static int hifive_serial_getc(struct udevice *dev)
 {
 	struct hifive_serial_priv *priv = dev_get_priv(dev);
 
-	int ch;
+	int ch = 0;
+	/*
 	ch = readl(&priv->usart->rxdata);
 
 	while((ch & UART_RXFIFO_EMPTY) != 0)
 	{
 		ch = readl(&priv->usart->rxdata);
 	}
+	*/
 	return ch;
 }
 
@@ -195,9 +114,8 @@ static int hifive_serial_putc(struct udevice *dev, const char ch)
 {
 	struct hifive_serial_priv *priv = dev_get_priv(dev);
 
-	while (readl(&priv->usart->txdata) & UART_TXFIFO_FULL);
+//	while (readl(&priv->usart->txdata) & UART_TXFIFO_FULL);
 	writel(ch, &priv->usart->txdata);
-
 	return 0;
 }
 
