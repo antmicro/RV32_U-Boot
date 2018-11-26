@@ -6,26 +6,29 @@
 
 #include <common.h>
 #include <command.h>
-
+#if 0
 #define HIFIVE_HART0_MSIP	0x2000000
 #define HIFIVE_HART1_MSIP	0x2000004
 #define HIFIVE_HART2_MSIP	0x2000008
 #define HIFIVE_HART3_MSIP	0x200000C
 #define HIFIVE_HART4_MSIP	0x2000010
 #define RAISE_SOFT_INT		0x1
+#endif
 
 unsigned long do_go_exec(ulong (*entry)(int, char * const []),
 			 int argc, char * const argv[])
 {
 	cleanup_before_linux();
+	#if 0
 	*((volatile uint32_t *)(HIFIVE_HART1_MSIP)) = RAISE_SOFT_INT;
 	*((volatile uint32_t *)(HIFIVE_HART2_MSIP)) = RAISE_SOFT_INT;
 	*((volatile uint32_t *)(HIFIVE_HART3_MSIP)) = RAISE_SOFT_INT;
 	*((volatile uint32_t *)(HIFIVE_HART4_MSIP)) = RAISE_SOFT_INT;
-
-	asm volatile ("li a1, 0xF0000000\n\t"
-			"csrr a0, mhartid\n\t"
+	asm volatile (
+	"li a1, 0xF0000000\n\t"
+	"csrr a0, mhartid\n\t"*/
 	  "li t4, 0x80000000\n\t"
 	  "jr t4\n\t");
+	 #endif
 	return entry(argc, argv);
 }
