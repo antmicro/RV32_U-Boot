@@ -388,3 +388,15 @@ trap_entry:
 cpu_init_crit:
     ret
 #endif
+
+#define r_type_insn(_f7, _rs2, _rs1, _f3, _rd, _opc) .word (((_f7) << 25) | ((_rs2) << 20) | ((_rs1) << 15) | ((_f3) << 12) | ((_rd) << 7) | ((_opc) << 0))
+
+#define LOAD_VIRTUAL(_rd, _rs1, _rs2 ) r_type_insn(0b0000000, _rs2, _rs1, 0b111, _rd, 0b0001111)
+#define LOAD_TLB(_rd, _rs1, _rs2 ) r_type_insn(0b0000001, _rs2, _rs1, 0b111, _rd, 0b0001111)
+
+.global map
+map:
+
+	LOAD_VIRTUAL(0, 10, 0)
+  LOAD_TLB(0, 12, 11)
+	ret
