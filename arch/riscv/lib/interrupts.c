@@ -60,7 +60,7 @@ uint handle_trap(uint mcause, uint epc, struct pt_regs *regs)
 		unsigned long miss_addr = 0;
 		unsigned int flags = 0xF8000000;
 		unsigned int map_phys, map_virt;
-		asm volatile("csrr %0, 0x343" : "=r"(miss_addr));
+		asm volatile("csrr %0, mbadaddr" : "=r"(miss_addr));
 		printf("MMU Fault: Fault addr=0x%08lx, mcause:%02X, epc=0x%02X.\n", miss_addr, mcause, (uint32_t)epc);
 		map_phys = ((miss_addr - 0x80000000) >> 12) & 0xfffff;
 		map_virt = (miss_addr >> 12) & 0xfffff;
