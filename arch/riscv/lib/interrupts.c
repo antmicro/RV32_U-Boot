@@ -19,12 +19,6 @@ extern void map(unsigned int, unsigned int, unsigned int);
 
 static unsigned int location = 0;
 
-void map_page(unsigned int phys, unsigned int virt, unsigned int flags)
-{
-	unsigned int entry = flags | phys;
-	map(virt, entry, location++);
-}
-
 int interrupt_init(void)
 {
 	return 0;
@@ -70,7 +64,7 @@ uint handle_trap(uint mcause, uint epc, struct pt_regs *regs)
 		printf("MMU Fault: Fault addr=0x%08lx, mcause:%02X, epc=0x%02X.\n", miss_addr, mcause, (uint32_t)epc);
 		map_phys = ((miss_addr - 0x80000000) >> 12) & 0xfffff;
 		map_virt = (miss_addr >> 12) & 0xfffff;
-		map_page(map_phys, map_virt, flags);
+		map(map_virt, map_phys | flags, location++);
 	}
 	else
 		_exit_trap(mcause, epc, regs);
